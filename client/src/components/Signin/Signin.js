@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import TextField from "@material-ui/core/TextField";
 import { Button } from "@material-ui/core";
+import { connect } from "react-redux";
 
 const Signin = () => {
   const [email, setemail] = useState("");
@@ -35,5 +36,7 @@ const Signin = () => {
     </div>
   );
 };
-
-export default Signin;
+const mapState = (state) => {
+  return {};
+};
+export default connect(mapState)(Signin);
