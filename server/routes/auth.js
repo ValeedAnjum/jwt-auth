@@ -6,7 +6,7 @@ const config = require("config");
 const User = require("../models/user");
 const { check, validationResult } = require("express-validator");
 
-router.get(
+router.post(
   "/signin",
   [
     check("email", "Please enter a valid email address").isEmail(),

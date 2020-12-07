@@ -1,35 +1,42 @@
-import React, { useState } from "react";
-import TextField from "@material-ui/core/TextField";
+import React from "react";
 import { Button } from "@material-ui/core";
 import { connect } from "react-redux";
+import { combineValidators, isRequired } from "revalidate";
+import { reduxForm, Field } from "redux-form";
+import TextInput from "../Form/TextInput";
+import { signIn } from "../../store/actions/authActions";
+const validate = combineValidators({
+  email: isRequired({ message: "Email is required" }),
+  password: isRequired({ message: "Password is also required" }),
+});
 
-const Signin = () => {
-  const [email, setemail] = useState("");
-  const [password, setpassword] = useState("");
-  const submit = () => {
-    console.log(email);
-    console.log(password);
+const Signin = (props) => {
+  const { signIn, handleSubmit } = props;
+  const submitVal = (val) => {
+    const { email, password } = val;
+    console.log(email, password);
+    signIn({ email, password });
   };
+
   return (
     <div>
-      <form style={{ width: "30%", margin: "auto", marginTop: "50px" }}>
-        <TextField
-          style={{ width: "100%", marginBottom: "10px" }}
-          id="outlined-basic"
-          label="Email"
-          variant="outlined"
-          value={email}
-          onChange={(e) => setemail(e.target.value)}
+      <form
+        style={{ width: "30%", margin: "auto", marginTop: "50px" }}
+        onSubmit={handleSubmit(submitVal)}
+      >
+        <Field
+          name="email"
+          component={TextInput}
+          type="email"
+          placeholder="Email"
         />
-        <TextField
-          style={{ width: "100%", marginBottom: "10px" }}
-          id="outlined-basic"
-          label="Password"
-          variant="outlined"
-          value={password}
-          onChange={(e) => setpassword(e.target.value)}
+        <Field
+          name="password"
+          component={TextInput}
+          type="password"
+          placeholder="Password"
         />
-        <Button fullWidth onClick={submit}>
+        <Button fullWidth type="submit">
           Signin
         </Button>
       </form>
@@ -37,6 +44,15 @@ const Signin = () => {
   );
 };
 const mapState = (state) => {
-  return {};
+  return { formi: state.form };
 };
-export default connect(mapState)(Signin);
+const mapDispatch = (dispatch) => {
+  return {
+    signIn: (email, password) => dispatch(signIn(email, password)),
+  };
+};
+
+export default connect(
+  mapState,
+  mapDispatch
+)(reduxForm({ form: "LoginForm", validate })(Signin));

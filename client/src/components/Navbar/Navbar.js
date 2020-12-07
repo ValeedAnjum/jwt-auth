@@ -11,7 +11,11 @@ const Navbar = (props) => {
     <Fragment>
       <AppBar position="relative" color="primary">
         <Toolbar>
-          <Typography variant="h6" style={{ flexGrow: "2" }}>
+          <Typography
+            variant="h6"
+            style={{ flexGrow: "2" }}
+            onClick={() => history.push("/info")}
+          >
             Valeed Anjum Siddiqui
           </Typography>
           <Button

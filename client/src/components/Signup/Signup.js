@@ -1,50 +1,54 @@
-import React, { useState } from "react";
-import TextField from "@material-ui/core/TextField";
+import React from "react";
 import { Button } from "@material-ui/core";
+import { connect } from "react-redux";
+import { combineValidators, isRequired } from "revalidate";
+import { reduxForm, Field } from "redux-form";
+import TextInput from "../Form/TextInput";
+const validate = combineValidators({
+  name: isRequired({ message: "Name is required" }),
+  email: isRequired({ message: "Email is required" }),
+  password: isRequired({ message: "Password is also required" }),
+});
 
-const Signup = () => {
-  const [name, setname] = useState("");
-  const [email, setemail] = useState("");
-  const [password, setpassword] = useState("");
-  const submit = () => {
-    console.log(name);
-
-    console.log(email);
-    console.log(password);
+const Signup = ({ handleSubmit }) => {
+  const submitVal = (val) => {
+    console.log(val);
   };
   return (
     <div>
-      <form style={{ width: "30%", margin: "auto", marginTop: "50px" }}>
-        <TextField
-          style={{ width: "100%", marginBottom: "10px" }}
-          id="outlined-basic"
-          label="Name"
-          variant="outlined"
-          value={name}
-          onChange={(e) => setname(e.target.value)}
+      <form
+        style={{ width: "30%", margin: "auto", marginTop: "50px" }}
+        onSubmit={handleSubmit(submitVal)}
+      >
+        <Field
+          name="name"
+          component={TextInput}
+          type="name"
+          placeholder="Name"
         />
-        <TextField
-          style={{ width: "100%", marginBottom: "10px" }}
-          id="outlined-basic"
-          label="Email"
-          variant="outlined"
-          value={email}
-          onChange={(e) => setemail(e.target.value)}
+        <Field
+          name="email"
+          component={TextInput}
+          type="email"
+          placeholder="Email"
         />
-        <TextField
-          style={{ width: "100%", marginBottom: "10px" }}
-          id="outlined-basic"
-          label="Password"
-          variant="outlined"
-          value={password}
-          onChange={(e) => setpassword(e.target.value)}
+        <Field
+          name="password"
+          component={TextInput}
+          type="password"
+          placeholder="Password"
         />
-        <Button fullWidth onClick={submit}>
+        <Button fullWidth type="submit">
           Signup
         </Button>
       </form>
     </div>
   );
 };
+const mapState = (state) => {
+  return {};
+};
 
-export default Signup;
+export default connect(mapState)(
+  reduxForm({ form: "SignupForm", validate })(Signup)
+);
