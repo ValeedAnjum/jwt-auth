@@ -1,4 +1,5 @@
 import React from "react";
+import { Redirect } from "react-router-dom";
 import { Button } from "@material-ui/core";
 import { connect } from "react-redux";
 import { combineValidators, isRequired } from "revalidate";
@@ -11,7 +12,11 @@ const validate = combineValidators({
 });
 
 const Signin = (props) => {
-  const { signIn, handleSubmit } = props;
+  const { signIn, handleSubmit, auth } = props;
+  console.log(auth);
+  if (auth) {
+    return <Redirect to="/info" />;
+  }
   const submitVal = (val) => {
     const { email, password } = val;
     console.log(email, password);
@@ -44,7 +49,7 @@ const Signin = (props) => {
   );
 };
 const mapState = (state) => {
-  return { formi: state.form };
+  return { auth: state.auth.auth };
 };
 const mapDispatch = (dispatch) => {
   return {

@@ -1,19 +1,25 @@
 import React from "react";
 import { Button } from "@material-ui/core";
 import { connect } from "react-redux";
+import { Redirect, withRouter } from "react-router-dom";
 import { combineValidators, isRequired } from "revalidate";
 import { reduxForm, Field } from "redux-form";
 import TextInput from "../Form/TextInput";
+import { register } from "../../store/actions/authActions";
 const validate = combineValidators({
   name: isRequired({ message: "Name is required" }),
   email: isRequired({ message: "Email is required" }),
   password: isRequired({ message: "Password is also required" }),
 });
 
-const Signup = ({ handleSubmit }) => {
+const Signup = ({ handleSubmit, Register, auth, history }) => {
   const submitVal = (val) => {
-    console.log(val);
+    const { name, email, password } = val;
+    Register({ name, email, password });
   };
+  if (auth) {
+    return <Redirect to="/info" />;
+  }
   return (
     <div>
       <form
@@ -46,9 +52,16 @@ const Signup = ({ handleSubmit }) => {
   );
 };
 const mapState = (state) => {
-  return {};
+  return {
+    auth: state.auth.auth,
+  };
 };
-
-export default connect(mapState)(
-  reduxForm({ form: "SignupForm", validate })(Signup)
-);
+const mapDispatch = (dispatch) => {
+  return {
+    Register: (cred) => dispatch(register(cred)),
+  };
+};
+export default connect(
+  mapState,
+  mapDispatch
+)(reduxForm({ form: "SignupForm", validate })(withRouter(Signup)));
